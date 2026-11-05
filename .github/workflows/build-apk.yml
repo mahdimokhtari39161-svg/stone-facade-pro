@@ -46,7 +46,7 @@ jobs:
           cp index.html www/index.html
           npm init -y
           npm install @capacitor/core@8 @capacitor/android@8
-          npm install --save-dev @capacitor/cli@8
+          npm install --save-dev @capacitor/cli@8 @capacitor/assets
 
       - name: Configure Capacitor
         run: |
@@ -64,6 +64,11 @@ jobs:
       - name: Sync Android project
         run: npx cap sync android
 
+      - name: Generate custom app icon
+        run: |
+          test -f "assets/icon.png"
+          npx capacitor-assets generate --android --assetPath assets --iconBackgroundColor "#333333" --splashBackgroundColor "#333333"
+
       - name: Build APK
         run: |
           cd android
@@ -73,7 +78,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Stone-Facade-Pro-NEW-APK
+          name: Stone-Facade-Pro-ICON-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
