@@ -52,8 +52,8 @@ jobs:
         run: |
           cat > capacitor.config.json <<'EOF'
           {
-            "appId": "com.stonefacade.designer",
-            "appName": "Stone Facade Designer",
+            "appId": "com.stonefacade.pro",
+            "appName": "Stone Facade Pro",
             "webDir": "www"
           }
           EOF
@@ -73,7 +73,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Stone-Facade-Pro-APK
+          name: Stone-Facade-Pro-NEW-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
