@@ -64,9 +64,14 @@ jobs:
       - name: Sync Android project
         run: npx cap sync android
 
+      - name: Prepare custom app icon
+        run: |
+          cp "assets/Stone Facade Pro App Icon.png" assets/icon.png
+          test -s "assets/icon.png"
+
       - name: Generate custom app icon
         run: |
-          test -f "assets/icon.png"
+          test -s "assets/icon.png"
           npx capacitor-assets generate --android --assetPath assets --iconBackgroundColor "#333333" --splashBackgroundColor "#333333"
 
       - name: Build APK
