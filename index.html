@@ -6,8 +6,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="طراح نمای سنگی">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon-192.png" type="image/png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/stonefacade.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/Stone%20Facade%20Pro%20App%20Icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap">
 <style>
 :root{--bg:#f3f0ea;--pn:#fff;--tx:#23201b;--mu:#7a7468;--ac:#b4601a;--bd:#ddd6c9;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -897,6 +897,78 @@ window.sfdSetLanguage=function(lang){if(!['fa','ar','en'].includes(lang))lang='f
  sfdApplyTree(document.body,lang);};
 function boot(){sfdAddLanguageControl();let saved='fa';try{saved=localStorage.getItem('sfd_language')||'fa'}catch(e){}sfdSetLanguage(saved);if(observer)observer.disconnect();observer=new MutationObserver(records=>{if(applying)return;for(const rec of records){if(rec.type==='characterData')applyTextNode(rec.target,activeLang);else{rec.addedNodes?.forEach(n=>{if(n.nodeType===Node.TEXT_NODE)applyTextNode(n,activeLang);else if(n.nodeType===Node.ELEMENT_NODE)sfdApplyTree(n,activeLang)});if(rec.type==='attributes'&&rec.target instanceof Element)applyAttrs(rec.target,activeLang);}}});observer.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label','alt']});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+<script id="sfd-lead-capture">
+(function(){
+  'use strict';
+  const API='https://felufxjvpdyxbaewitoz.supabase.co';
+  const KEY='sb_publishable_kWaWah9297EOM475sv9ZjQ_5zbaRWR6';
+  const QUEUE_KEY='sfd_lead_queue_v1';
+  const labels={
+    fa:{button:'درخواست مشاوره',title:'درخواست طراحی، تأمین سنگ یا اجرا',name:'نام و نام خانوادگی',phone:'تلفن / واتساپ',email:'ایمیل',country:'کشور',type:'نوع درخواست',message:'توضیحات پروژه',send:'ارسال درخواست',close:'بستن',success:'درخواست شما ثبت شد؛ برای پیگیری با شما تماس می‌گیریم.',queued:'ارتباط برقرار نیست؛ درخواست روی همین دستگاه ذخیره شد و پس از اتصال ارسال می‌شود.',error:'ارسال انجام نشد. اطلاعات را بررسی کنید و دوباره تلاش کنید.'},
+    en:{button:'Request a quote',title:'Design, stone supply or installation inquiry',name:'Full name',phone:'Phone / WhatsApp',email:'Email',country:'Country',type:'Request type',message:'Project details',send:'Send inquiry',close:'Close',success:'Your inquiry was submitted. We will contact you.',queued:'Offline: your inquiry is saved on this device and will be sent when connected.',error:'Could not submit. Please check the details and try again.'},
+    ar:{button:'طلب استشارة',title:'طلب تصميم أو توريد الحجر أو التنفيذ',name:'الاسم الكامل',phone:'الهاتف / واتساب',email:'البريد الإلكتروني',country:'الدولة',type:'نوع الطلب',message:'تفاصيل المشروع',send:'إرسال الطلب',close:'إغلاق',success:'تم إرسال طلبك؛ سنتواصل معك.',queued:'غير متصل: تم حفظ الطلب على هذا الجهاز وسيُرسل عند الاتصال.',error:'تعذر الإرسال. تحقق من البيانات وحاول مرة أخرى.'}
+  };
+  const lang=()=>{try{return labels[localStorage.getItem('sfd_language')||'fa']||labels.fa}catch(e){return labels.fa}};
+  const getQueue=()=>{try{return JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]')}catch(e){return []}};
+  const setQueue=q=>{try{localStorage.setItem(QUEUE_KEY,JSON.stringify(q))}catch(e){}};
+  async function sendLead(data){
+    const res=await fetch(API+'/rest/v1/customer_inquiries',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(data)});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+  }
+  async function flushQueue(){
+    if(!navigator.onLine)return;
+    const q=getQueue(),left=[];
+    for(const item of q){try{await sendLead(item)}catch(e){left.push(item)}}
+    setQueue(left);
+  }
+  function openLead(){
+    const t=lang(),box=document.getElementById('bx'),modal=document.getElementById('mo');
+    box.innerHTML='<h3>'+t.title+'</h3><form id="sfdLeadForm" style="display:grid;gap:9px;max-width:620px">'+
+      '<label>'+t.name+'<input name="customer_name" minlength="2" maxlength="120" required style="display:block;width:100%;box-sizing:border-box;margin-top:4px"></label>'+
+      '<label>'+t.phone+'<input name="phone" maxlength="50" style="display:block;width:100%;box-sizing:border-box;margin-top:4px"></label>'+
+      '<label>'+t.email+'<input name="email" type="email" maxlength="254" style="display:block;width:100%;box-sizing:border-box;margin-top:4px"></label>'+
+      '<label>'+t.country+'<input name="country" maxlength="100" style="display:block;width:100%;box-sizing:border-box;margin-top:4px"></label>'+
+      '<label>'+t.type+'<select name="inquiry_type" style="display:block;width:100%;margin-top:4px"><option value="design">Design / طراحی نما</option><option value="stone_supply">Stone supply / تأمین سنگ</option><option value="installation">Installation / اجرا</option><option value="export">Export / صادرات</option><option value="consultation">Consultation / مشاوره</option></select></label>'+
+      '<label>'+t.message+'<textarea name="message" minlength="10" maxlength="5000" required rows="4" style="display:block;width:100%;box-sizing:border-box;margin-top:4px"></textarea></label>'+
+      '<p id="sfdLeadStatus" role="status" aria-live="polite"></p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="pri" type="submit">'+t.send+'</button><button type="button" id="sfdLeadClose">'+t.close+'</button></div></form>';
+    modal.classList.add('s');
+    document.getElementById('sfdLeadClose').addEventListener('click',()=>modal.classList.remove('s'));
+    document.getElementById('sfdLeadForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const f=new FormData(e.currentTarget),data=Object.fromEntries(f.entries());
+      data.customer_name=String(data.customer_name||'').trim();
+      data.phone=String(data.phone||'').trim()||null;
+      data.email=String(data.email||'').trim()||null;
+      data.country=String(data.country||'').trim()||null;
+      data.message=String(data.message||'').trim();
+      const status=document.getElementById('sfdLeadStatus'),submit=e.currentTarget.querySelector('[type=submit]');
+      if(!data.phone&&!data.email){status.textContent=t.error+' — '+t.phone+' / '+t.email;return}
+      submit.disabled=true;
+      try{
+        if(!navigator.onLine)throw new Error('OFFLINE');
+        await sendLead(data);
+        status.textContent=t.success;
+        e.currentTarget.reset();
+        setTimeout(()=>modal.classList.remove('s'),1800);
+      }catch(err){
+        if(err.message==='OFFLINE'||!navigator.onLine||String(err.message).includes('Failed to fetch')){
+          const q=getQueue();q.push(data);setQueue(q);status.textContent=t.queued;e.currentTarget.reset();
+        }else{status.textContent=t.error;submit.disabled=false;}
+      }
+    });
+  }
+  function installButton(){
+    const header=document.querySelector('header');if(!header||document.getElementById('sfdLeadButton'))return;
+    const b=document.createElement('button');b.id='sfdLeadButton';b.textContent=lang().button;b.className='pri';b.addEventListener('click',openLead);
+    const login=header.querySelector('#bu');header.insertBefore(b,login||null);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installButton,{once:true});else installButton();
+  window.addEventListener('online',flushQueue);
+  window.sfdOpenLead=openLead;
+  flushQueue();
 })();
 </script>
 </body></html>
