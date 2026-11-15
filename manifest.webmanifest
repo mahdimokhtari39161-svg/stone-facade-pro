@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "Stone Facade Pro",
+  "short_name": "Facade Pro",
+  "description": "Professional 3D stone facade design, stone library and project quotation",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#24272b",
+  "theme_color": "#24272b",
+  "orientation": "any",
+  "categories": ["design", "business", "productivity"],
+  "icons": [
+    {"src":"icons/stonefacade.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
